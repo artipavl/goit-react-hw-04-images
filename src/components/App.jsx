@@ -14,14 +14,17 @@ export function App() {
   const [search, setSearch] = useState('');
   const [src, setSrc] = useState('');
   const [alt, setAlt] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    if (page === 0 && !name) {
+    if (page === 0 || !name) {
       return;
     }
     setLoade(true);
-    getImage(name, page)
-      .then(({ hits }) => {
+
+    async function fatch() {
+      try {
+        const { hits } = await getImage(name, page);
         const data = hits.map(({ id, webformatURL, largeImageURL, tags }) => ({
           id,
           webformatURL,
@@ -30,8 +33,14 @@ export function App() {
         }));
         setImages(images => [...images, ...data]);
         setLoade(false);
-      })
-      .catch(console.error);
+      } catch (error) {
+        console.log(error)
+        setLoade(false);
+        setError(error);
+      }
+    }
+
+    fatch();
   }, [name, page]);
 
   const onSearch = searchName => {
@@ -57,6 +66,7 @@ export function App() {
         <Button onClick={() => setPage(page => page + 1)} />
       )}
       {src && <Modal close={() => setSrc('')} src={src} alt={alt} />}
+      {error && <p>{error.message}</p>}
     </div>
   );
 }
