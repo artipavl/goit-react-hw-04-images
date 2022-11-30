@@ -4,7 +4,11 @@ import css from './Searchbar.module.css';
 
 const onSubmit = (e, onSearch) => {
   e.preventDefault();
-  onSearch(e.target.elements.search.value);
+  const search = e.target.elements.search.value;
+  if (!search) {
+    return alert('Пошук пустий');
+  }
+  onSearch(search);
 };
 
 export const Searchbar = ({ onSearch, search, onChange }) => {
