@@ -38,14 +38,9 @@ export function App() {
     //перевірка на однаковий пошук
     if (searchName !== name) {
       setName(searchName);
-
       setPage(1);
       setImages([]);
     }
-  };
-
-  const loadeMore = () => {
-    setPage(page => page + 1);
   };
 
   const openModal = (src, alt) => {
@@ -53,18 +48,15 @@ export function App() {
     setAlt(alt);
   };
 
-  const closeModal = () => {
-    setSrc('');
-    setAlt('');
-  };
-
   return (
     <div className="App">
       <Searchbar onSearch={onSearch} onChange={setSearch} search={search} />
       {images.length > 0 && <ImageGallery images={images} click={openModal} />}
       {loade && <Loader />}
-      {images.length > 0 && <Button onClick={loadeMore} />}
-      {src && <Modal close={closeModal} src={src} alt={alt} />}
+      {images.length > 0 && (
+        <Button onClick={() => setPage(page => page + 1)} />
+      )}
+      {src && <Modal close={() => setSrc('')} src={src} alt={alt} />}
     </div>
   );
 }
